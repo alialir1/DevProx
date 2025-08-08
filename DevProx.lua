@@ -87,7 +87,7 @@ echo "~ The Token Was Not Found In The config.lua File!"
 echo "┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉"
 exit 1
 fi
-./tg -s ./DevProx.lua -p PROFILE --bot=$token
+lua main.lua
 done
 ]])  
 file:close()  
@@ -363,8 +363,10 @@ end,nil))
 end
 --     Source DevProx     --
 function send(chat_id, reply_to_message_id, text)
-local TextParseMode = {ID = "TextParseModeMarkdown"}
-pcall(tdcli_function ({ID = "SendMessage",chat_id_ = chat_id,reply_to_message_id_ = reply_to_message_id,disable_notification_ = 1,from_background_ = 1,reply_markup_ = nil,input_message_content_ = {ID = "InputMessageText",text_ = text,disable_web_page_preview_ = 1,clear_draft_ = 0,entities_ = {},parse_mode_ = TextParseMode,},}, dl_cb, nil))
+  local URL = dofile("./libs/url.lua")
+  local https = require("ssl.https")
+  local send_api = "https://api.telegram.org/bot"..TokenBot.."/sendMessage?chat_id="..chat_id.."&text="..URL.escape(text).."&reply_to_message_id="..(reply_to_message_id or 0).."&parse_mode=Markdown&disable_web_page_preview=true"
+  https.request(send_api)
 end
 --     Source DevProx     --
 function DevProxFiles(msg)
@@ -582,7 +584,12 @@ end
 return GetApi(send_api) 
 end
 --     Source DevProx     --
-function EditMsg(chat_id, message_id, text, markdown) local send_api = "https://api.telegram.org/bot"..TokenBot.."/editMessageText?chat_id="..chat_id.."&message_id="..message_id.."&text="..URL.escape(text).."&parse_mode=Markdown&disable_web_page_preview=true" return GetApi(send_api)  end
+function EditMsg(chat_id, message_id, text, markdown)
+  local URL = dofile("./libs/url.lua")
+  local https = require("ssl.https")
+  local send_api = "https://api.telegram.org/bot"..TokenBot.."/editMessageText?chat_id="..chat_id.."&message_id="..message_id.."&text="..URL.escape(text).."&parse_mode=Markdown&disable_web_page_preview=true"
+  return https.request(send_api)
+end
 --     Source DevProx     --
 function Pin(channel_id, message_id, disable_notification) 
 tdcli_function ({ 
