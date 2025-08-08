@@ -87,7 +87,7 @@ echo "~ The Token Was Not Found In The config.lua File!"
 echo "┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉ ≈ ┉"
 exit 1
 fi
-lua main.lua
+lua dtlua_main.lua
 done
 ]])  
 file:close()  
